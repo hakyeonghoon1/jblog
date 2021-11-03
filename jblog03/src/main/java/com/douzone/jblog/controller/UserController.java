@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -58,7 +59,14 @@ public class UserController {
 	
 	@RequestMapping(value="/login", method=RequestMethod.GET)
 	public String login() {
-		
+
+		return "user/login";
+	}
+	
+	@RequestMapping(value="/login/{blogId}", method=RequestMethod.GET)
+	public String login(@PathVariable("blogId") String blogId, Model model) {
+
+		model.addAttribute("blogId", blogId);
 		return "user/login";
 	}
 	

@@ -16,14 +16,14 @@
 			<ul>
 				<c:choose>
 					<c:when test="${authUser ==null }">
-						<li><a href="${pageContext.request.contextPath}/user/auth">로그인</a></li>
+						<li><a href="${pageContext.request.contextPath}/user/login/${blogId }">로그인</a></li>
 					</c:when>
 					<c:when test="${authUser.id != blogId }">
 						<li><a href="${pageContext.request.contextPath}/user/logout">로그아웃</a></li>
 					</c:when>
 					<c:when test="${authUser.id == blogId }">
-						<li><a href="${pageContext.request.contextPath}/logout">로그아웃</a></li>
-						<li><a href="${pageContext.request.contextPath}/${blogId }/admin">블로그 관리</a></li>
+						<li><a href="${pageContext.request.contextPath}/user/logout">로그아웃</a></li>
+						<li><a href="${pageContext.request.contextPath}/${blogId }/adminBasic">블로그 관리</a></li>
 					</c:when>
 					<c:otherwise>
 					</c:otherwise>

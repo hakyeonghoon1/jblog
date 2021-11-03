@@ -25,6 +25,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 
 		String id = request.getParameter("id");
 		String password = request.getParameter("password");
+		String blogId = request.getParameter("blogId");
 		
 		UserVo authUser = userService.getUser(id, password);
 		if(authUser == null) {
@@ -34,12 +35,18 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 			return false;
 		}
 		//session 처리
-		System.out.println(authUser);
+		//System.out.println(authUser);
 		
 		HttpSession session = request.getSession(true);
 		session.setAttribute("authUser", authUser);
 
-		response.sendRedirect(request.getContextPath());
+		
+		if(blogId !="") {
+			response.sendRedirect(request.getContextPath()+"/blogId");
+		} else {
+			response.sendRedirect(request.getContextPath());
+		}
+		
 		return false;
 	}
 
