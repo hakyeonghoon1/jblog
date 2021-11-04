@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.douzone.jblog.vo.BlogVo;
 import com.douzone.jblog.vo.CategoryVo;
+import com.douzone.jblog.vo.PostVo;
 
 @Repository
 public class BlogRepository {
@@ -23,13 +24,24 @@ public class BlogRepository {
 
 	public BlogVo getBlogBasic(String blogId) {
 		
-		return sqlSession.selectOne("blog.findById",blogId);
+		return sqlSession.selectOne("blog.findBlogById",blogId);
 	}
 
 	public List<CategoryVo> getBlogCategory(String blogId) {
 		List<CategoryVo> list = new ArrayList<>();
 		list = sqlSession.selectList("blog.findCategoryById", blogId);
 		return list;
+	}
+
+	public boolean insertCategory(CategoryVo vo) {
+		int count = sqlSession.insert("blog.insertCategory", vo);
+		return count ==1;
+	}
+
+	public boolean insertPost(PostVo vo) {
+		int count = sqlSession.insert("blog.insertPost",vo);
+		return count ==1;
+		
 	}
 
 }

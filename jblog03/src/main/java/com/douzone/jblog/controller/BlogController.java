@@ -18,6 +18,7 @@ import com.douzone.jblog.security.AuthUser;
 import com.douzone.jblog.service.BlogService;
 import com.douzone.jblog.vo.BlogVo;
 import com.douzone.jblog.vo.CategoryVo;
+import com.douzone.jblog.vo.PostVo;
 import com.douzone.jblog.vo.UserVo;
 
 @Controller
@@ -31,12 +32,44 @@ public class BlogController {
 	private ServletContext servletContext;
 	
 	@RequestMapping("")
-	public String main(@PathVariable("id") String blogId, Model model) {
-		System.out.println(blogId);
-		
+	public String main(@PathVariable("id") String blogId,
+					   Model model) {
+
+		BlogVo blogVo = blogService.getBlogBasic(blogId);
+		List<CategoryVo> categoryList = blogService.getBlogCategory(blogId);
 		model.addAttribute("blogId", blogId);
+		model.addAttribute("blogVo", blogVo);
+		model.addAttribute("categoryList", categoryList);
 		return "blog/blog-main";
 	}
+	/*
+	@RequestMapping("/{category}")
+	public String main2(@PathVariable("id") String blogId,
+					   @PathVariable("category") Long categoryNo,
+					   Model model) {
+	
+		BlogVo blogVo = blogService.getBlogBasic(blogId);
+		List<CategoryVo> categoryList = blogService.getBlogCategory(blogId);
+		model.addAttribute("blogId", blogId);
+		model.addAttribute("blogVo", blogVo);
+		model.addAttribute("categoryList", categoryList);
+		return "blog/blog-main";
+	}
+	
+	@RequestMapping("/{category}/{post}")
+	public String main3(@PathVariable("id") String blogId,
+					   @PathVariable("category") Long categoryNo,
+					   @PathVariable("post") Long postNo,
+					   Model model) {
+		
+		BlogVo blogVo = blogService.getBlogBasic(blogId);
+		List<CategoryVo> categoryList = blogService.getBlogCategory(blogId);
+		model.addAttribute("blogId", blogId);
+		model.addAttribute("blogVo", blogVo);
+		model.addAttribute("categoryList", categoryList);
+		return "blog/blog-main";
+	}
+	 */
 	
 	@Auth
 	@RequestMapping("/adminBasic")
@@ -79,15 +112,49 @@ public class BlogController {
 		return "blog/blog-admin-category";
 	}
 	
-	@Auth
-	@RequestMapping("/adminWrite")
-	public String adminWrite(@PathVariable("id") String blogId,
-							 @AuthUser UserVo authUser) {
+	@RequestMapping("/adminCategoryInsert")
+	public String adminCategoryInsert(String name, String desc,
+									  @PathVariable("id") String blogId,
+									  @AuthUser UserVo authUser) {
 		if(!blogId.equals(authUser.getId())) {
 			return "blog/blog-main";
 		}
-		
+		CategoryVo vo = new CategoryVo();
+		vo.setBlogId(blogId);
+		vo.setDesc(desc);
+		vo.setName(name);
+		blogService.insertCategory(vo);
+		return "redirect:/"+blogId+"/adminCategory";
+	}
+	
+	@Auth
+	@RequestMapping("/adminWrite")
+	public String adminWrite(@PathVariable("id") String blogId,
+							 @AuthUser UserVo authUser, Model model) {
+		if(!blogId.equals(authUser.getId())) {
+			return "blog/blog-main";
+		}
+		List<CategoryVo> categoryList = blogService.getBlogCategory(blogId);
+		model.addAttribute("categoryList", categoryList);
+		model.addAttribute("blogId", blogId);
 		return "blog/blog-admin-write";
+	}
+	
+	@RequestMapping("/adminWriteInsert")
+	public String postInsert(String title, String content,
+							@PathVariable("id") String blogId,
+							@AuthUser UserVo authUser,
+							Long category) {
+		if(!blogId.equals(authUser.getId())) {
+			return "blog/blog-main";
+		}
+		PostVo vo = new PostVo();
+		vo.setCategoryNo(category);
+		vo.setContents(content);
+		vo.setTitle(title);
+		
+		blogService.insertPost(vo);
+		return "redirect:/"+blogId;
 	}
 
 }

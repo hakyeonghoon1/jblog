@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.douzone.jblog.repository.BlogRepository;
 import com.douzone.jblog.vo.BlogVo;
 import com.douzone.jblog.vo.CategoryVo;
+import com.douzone.jblog.vo.PostVo;
 
 @Service
 public class BlogService {
@@ -81,6 +82,16 @@ public class BlogService {
 		List<CategoryVo> list = new ArrayList<>();
 		list = blogRepository.getBlogCategory(blogId);
 		return list;
+		
+	}
+
+	public void insertCategory(CategoryVo vo) {
+		blogRepository.insertCategory(vo);
+		
+	}
+
+	public void insertPost(PostVo vo) {
+		blogRepository.insertPost(vo);
 		
 	}
 }
