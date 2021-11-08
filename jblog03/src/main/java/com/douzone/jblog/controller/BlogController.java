@@ -35,8 +35,8 @@ public class BlogController {
 					   @PathVariable(value="postNo", required=false) Long postNo,
 					   Model model) {
 		System.out.println(blogId+"cNo:"+categoryNo+"pNo:"+postNo);
-		if( categoryNo == null && postNo==null) {
-			categoryNo=1L;
+		if( categoryNo == null && postNo==null ) {
+			categoryNo=blogService.getRecentPostCategoryNo(blogId);
 			List<PostVo> postList = new ArrayList<PostVo>();
 			BlogVo blogVo = blogService.getBlogBasic(blogId);
 			List<CategoryVo> categoryList = blogService.getBlogCategory(blogId);
@@ -83,8 +83,7 @@ public class BlogController {
 			return "blog/blog-main";
 		}
 	}
-	
-	
+		
 	@Auth
 	@RequestMapping("/adminBasic")
 	public String adminBasic(@PathVariable("id") String blogId,

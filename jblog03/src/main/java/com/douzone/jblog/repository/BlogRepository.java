@@ -62,4 +62,9 @@ public class BlogRepository {
 		return sqlSession.selectOne("blog.selectPost", map);
 	}
 
+	public Long getRecentPostCategoryNo(String blogId) {
+		
+		return sqlSession.selectOne("blog.getRecentPostCategoryNo", blogId);
+	}
+
 }

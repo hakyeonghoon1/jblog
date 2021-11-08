@@ -104,4 +104,9 @@ public class BlogService {
 		
 		return blogRepository.getPost(blogId, categoryNo, postNo);
 	}
+
+	public Long getRecentPostCategoryNo(String blogId) {
+		
+		return blogRepository.getRecentPostCategoryNo(blogId);
+	}
 }
