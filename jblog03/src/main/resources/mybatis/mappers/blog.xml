@@ -14,6 +14,47 @@
 			select id, title, logo from blog where id= #{id} 
 		]]>
 	</select>
+	
+	<select id="selectPostByCategoryNo" parameterType="map" resultType="postvo">
+		<![CDATA[
+			select t2.no, t2.title, t2.contents, t2.reg_date as regDate, t2.category_no as categoryNo
+			from category t1, post t2
+			where t1.no=t2.category_no
+			and t1.blog_id = #{blogId }
+			and t1.no = #{categoryNo }
+			order by t2.no desc
+		]]>
+	</select>
+	
+	<select id="selectPost" parameterType="map" resultType="postvo">
+		<choose>
+			<when test="postNo == null">
+				<![CDATA[
+					select t2.no, t2.title, t2.contents, t2.reg_date as regDate, t2.category_no as categoryNo
+					from category t1, post t2
+					where t1.no=t2.category_no
+					and t1.blog_id = #{blogId }
+					and t1.no = #{categoryNo }
+					order by t2.no desc
+					limit 1
+				]]>
+			</when>
+			<otherwise>
+				<![CDATA[
+					select t2.no, t2.title, t2.contents, t2.reg_date as regDate, t2.category_no as categoryNo
+					from category t1, post t2
+					where t1.no=t2.category_no
+					and t1.blog_id = #{blogId }
+					and t1.no = #{categoryNo }
+					and t2.no = #{postNo }
+					order by t2.no desc
+					limit 1
+				]]>
+			</otherwise>
+		</choose>
+		
+	</select>
+	
 	<insert id="insertBlog" parameterType="blogvo">
 		<![CDATA[
 			insert into blog values(#{id }, #{title }, #{logo })

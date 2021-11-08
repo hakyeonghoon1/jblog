@@ -94,4 +94,14 @@ public class BlogService {
 		blogRepository.insertPost(vo);
 		
 	}
+
+	public List<PostVo> getPostList(Long categoryNo, String blogId) {
+		return blogRepository.getPostList(categoryNo,blogId);
+		
+	}
+
+	public PostVo getPost(String blogId, Long categoryNo, Long postNo) {
+		
+		return blogRepository.getPost(blogId, categoryNo, postNo);
+	}
 }

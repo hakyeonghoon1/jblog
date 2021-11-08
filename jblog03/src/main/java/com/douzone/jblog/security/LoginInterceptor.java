@@ -42,7 +42,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 
 		
 		if(blogId !="") {
-			response.sendRedirect(request.getContextPath()+"/blogId");
+			response.sendRedirect(request.getContextPath()+"/"+blogId);
 		} else {
 			response.sendRedirect(request.getContextPath());
 		}

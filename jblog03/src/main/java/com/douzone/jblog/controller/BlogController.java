@@ -2,6 +2,7 @@ package com.douzone.jblog.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.ServletContext;
 
@@ -22,54 +23,67 @@ import com.douzone.jblog.vo.PostVo;
 import com.douzone.jblog.vo.UserVo;
 
 @Controller
-@RequestMapping("/{id:(?!assets).*}")
+@RequestMapping("/{id:(?!assets$|images$).*}")
 public class BlogController {
 
 	@Autowired
 	private BlogService blogService;
 	
-	@Autowired
-	private ServletContext servletContext;
-	
-	@RequestMapping("")
+	@RequestMapping({"/{categoryNo}/{postNo}","/{categoryNo}",""})
 	public String main(@PathVariable("id") String blogId,
+					   @PathVariable(value="categoryNo", required=false) Long categoryNo,
+					   @PathVariable(value="postNo", required=false) Long postNo,
 					   Model model) {
-
-		BlogVo blogVo = blogService.getBlogBasic(blogId);
-		List<CategoryVo> categoryList = blogService.getBlogCategory(blogId);
-		model.addAttribute("blogId", blogId);
-		model.addAttribute("blogVo", blogVo);
-		model.addAttribute("categoryList", categoryList);
-		return "blog/blog-main";
+		System.out.println(blogId+"cNo:"+categoryNo+"pNo:"+postNo);
+		if( categoryNo == null && postNo==null) {
+			categoryNo=1L;
+			List<PostVo> postList = new ArrayList<PostVo>();
+			BlogVo blogVo = blogService.getBlogBasic(blogId);
+			List<CategoryVo> categoryList = blogService.getBlogCategory(blogId);
+			postList = blogService.getPostList(categoryNo,blogId);
+			PostVo postVo = blogService.getPost(blogId, categoryNo, postNo); 
+			
+			model.addAttribute("blogId", blogId);
+			model.addAttribute("blogVo", blogVo);
+			model.addAttribute("categoryList", categoryList);
+			model.addAttribute("postList", postList);
+			model.addAttribute("postVo", postVo);
+			
+			return "blog/blog-main";
+			
+		} else if(categoryNo != null && postNo==null) {
+			
+			List<PostVo> postList = new ArrayList<PostVo>();
+			BlogVo blogVo = blogService.getBlogBasic(blogId);
+			List<CategoryVo> categoryList = blogService.getBlogCategory(blogId);
+			postList = blogService.getPostList(categoryNo,blogId);
+			PostVo postVo = blogService.getPost(blogId, categoryNo, postNo);
+			
+			model.addAttribute("blogId", blogId);
+			model.addAttribute("blogVo", blogVo);
+			model.addAttribute("categoryList", categoryList);
+			model.addAttribute("postList", postList);
+			model.addAttribute("postVo", postVo);
+			
+			return "blog/blog-main";
+		} else {
+			
+			List<PostVo> postList = new ArrayList<PostVo>();
+			BlogVo blogVo = blogService.getBlogBasic(blogId);
+			List<CategoryVo> categoryList = blogService.getBlogCategory(blogId);
+			postList = blogService.getPostList(categoryNo,blogId);
+			PostVo postVo = blogService.getPost(blogId, categoryNo, postNo);
+			
+			model.addAttribute("blogId", blogId);
+			model.addAttribute("blogVo", blogVo);
+			model.addAttribute("categoryList", categoryList);
+			model.addAttribute("postList", postList);
+			model.addAttribute("postVo", postVo);
+			
+			return "blog/blog-main";
+		}
 	}
-	/*
-	@RequestMapping("/{category}")
-	public String main2(@PathVariable("id") String blogId,
-					   @PathVariable("category") Long categoryNo,
-					   Model model) {
 	
-		BlogVo blogVo = blogService.getBlogBasic(blogId);
-		List<CategoryVo> categoryList = blogService.getBlogCategory(blogId);
-		model.addAttribute("blogId", blogId);
-		model.addAttribute("blogVo", blogVo);
-		model.addAttribute("categoryList", categoryList);
-		return "blog/blog-main";
-	}
-	
-	@RequestMapping("/{category}/{post}")
-	public String main3(@PathVariable("id") String blogId,
-					   @PathVariable("category") Long categoryNo,
-					   @PathVariable("post") Long postNo,
-					   Model model) {
-		
-		BlogVo blogVo = blogService.getBlogBasic(blogId);
-		List<CategoryVo> categoryList = blogService.getBlogCategory(blogId);
-		model.addAttribute("blogId", blogId);
-		model.addAttribute("blogVo", blogVo);
-		model.addAttribute("categoryList", categoryList);
-		return "blog/blog-main";
-	}
-	 */
 	
 	@Auth
 	@RequestMapping("/adminBasic")
@@ -77,7 +91,7 @@ public class BlogController {
 							 @AuthUser UserVo authUser,
 							 Model model) {
 		if(!blogId.equals(authUser.getId())) {
-			return "blog/blog-main";
+			return "redirect:/"+blogId;
 		}
 		
 		BlogVo blogVo = blogService.getBlogBasic(authUser.getId());
@@ -103,10 +117,13 @@ public class BlogController {
 	public String adminCategory(@PathVariable("id") String blogId,
 							 @AuthUser UserVo authUser, Model model) {
 		if(!blogId.equals(authUser.getId())) {
-			return "blog/blog-main";
+			return "redirect:/"+blogId;
 		}
 		List<CategoryVo> list = new ArrayList<>(); 
 		list = blogService.getBlogCategory(blogId);
+		BlogVo blogVo = blogService.getBlogBasic(authUser.getId());
+		
+		model.addAttribute("blogVo", blogVo);
 		model.addAttribute("blogId", blogId);
 		model.addAttribute("list", list);
 		return "blog/blog-admin-category";
@@ -117,7 +134,7 @@ public class BlogController {
 									  @PathVariable("id") String blogId,
 									  @AuthUser UserVo authUser) {
 		if(!blogId.equals(authUser.getId())) {
-			return "blog/blog-main";
+			return "redirect:/"+blogId;
 		}
 		CategoryVo vo = new CategoryVo();
 		vo.setBlogId(blogId);
@@ -132,9 +149,12 @@ public class BlogController {
 	public String adminWrite(@PathVariable("id") String blogId,
 							 @AuthUser UserVo authUser, Model model) {
 		if(!blogId.equals(authUser.getId())) {
-			return "blog/blog-main";
+			return "redirect:/"+blogId;
 		}
 		List<CategoryVo> categoryList = blogService.getBlogCategory(blogId);
+		BlogVo blogVo = blogService.getBlogBasic(authUser.getId());
+		
+		model.addAttribute("blogVo", blogVo);
 		model.addAttribute("categoryList", categoryList);
 		model.addAttribute("blogId", blogId);
 		return "blog/blog-admin-write";
@@ -146,7 +166,7 @@ public class BlogController {
 							@AuthUser UserVo authUser,
 							Long category) {
 		if(!blogId.equals(authUser.getId())) {
-			return "blog/blog-main";
+			return "redirect:/"+blogId;
 		}
 		PostVo vo = new PostVo();
 		vo.setCategoryNo(category);
