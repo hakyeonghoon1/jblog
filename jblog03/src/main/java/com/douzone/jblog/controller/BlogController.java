@@ -86,9 +86,6 @@ public class BlogController {
 	public String adminBasic(@PathVariable("id") String blogId,
 							 @AuthUser UserVo authUser,
 							 Model model) {
-//		if(!blogId.equals(authUser.getId())) {
-//			return "redirect:/"+blogId;
-//		}
 		
 		BlogVo blogVo = blogService.getBlogBasic(authUser.getId());
 		model.addAttribute("blogVo", blogVo);
@@ -102,7 +99,7 @@ public class BlogController {
 		
 		blogService.update(title, multipartFile, authUser.getId());
 		BlogVo blogVo = blogService.getBlogBasic(authUser.getId());
-		//servletContext.setAttribute("blogVo", blogVo);
+
 		System.out.println(blogVo);
 		model.addAttribute("blogVo", blogVo);
 		return "blog/blog-admin-basic";
@@ -112,9 +109,7 @@ public class BlogController {
 	@RequestMapping("/admin/category")
 	public String adminCategory(@PathVariable("id") String blogId,
 							 @AuthUser UserVo authUser, Model model) {
-		if(!blogId.equals(authUser.getId())) {
-			return "redirect:/"+blogId;
-		}
+
 		List<CategoryVo> list = new ArrayList<>(); 
 		list = blogService.getBlogCategory(blogId);
 		BlogVo blogVo = blogService.getBlogBasic(authUser.getId());
@@ -130,9 +125,7 @@ public class BlogController {
 	public String adminCategoryInsert(String name, String desc,
 									  @PathVariable("id") String blogId,
 									  @AuthUser UserVo authUser) {
-		if(!blogId.equals(authUser.getId())) {
-			return "redirect:/"+blogId;
-		}
+
 		CategoryVo vo = new CategoryVo();
 		vo.setBlogId(blogId);
 		vo.setDesc(desc);
@@ -155,9 +148,7 @@ public class BlogController {
 	@RequestMapping("/admin/write")
 	public String adminWrite(@PathVariable("id") String blogId,
 							 @AuthUser UserVo authUser, Model model) {
-		if(!blogId.equals(authUser.getId())) {
-			return "redirect:/"+blogId;
-		}
+
 		List<CategoryVo> categoryList = blogService.getBlogCategory(blogId);
 		BlogVo blogVo = blogService.getBlogBasic(authUser.getId());
 		
@@ -173,9 +164,7 @@ public class BlogController {
 							@PathVariable("id") String blogId,
 							@AuthUser UserVo authUser,
 							Long category) {
-		if(!blogId.equals(authUser.getId())) {
-			return "redirect:/"+blogId;
-		}
+
 		PostVo vo = new PostVo();
 		vo.setCategoryNo(category);
 		vo.setContents(content);
