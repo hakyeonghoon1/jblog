@@ -109,4 +109,9 @@ public class BlogService {
 		
 		return blogRepository.getRecentPostCategoryNo(blogId);
 	}
+
+	public void deleteCategory(Long categoryNo) {
+		blogRepository.deleteCategory(categoryNo);
+		
+	}
 }

@@ -67,4 +67,10 @@ public class BlogRepository {
 		return sqlSession.selectOne("blog.getRecentPostCategoryNo", blogId);
 	}
 
+	public boolean deleteCategory(Long categoryNo) {
+		int count =sqlSession.delete("blog.deleteCategory", categoryNo);
+		return count ==1;
+		
+	}
+
 }

@@ -15,9 +15,9 @@
 		<div id="wrapper">
 			<div id="content" class="full-screen">
 				<ul class="admin-menu">
-					<li><a href="${pageContext.request.contextPath}/${blogVo.id }/adminBasic">기본설정</a></li>
-					<li class="selected"><a href="${pageContext.request.contextPath}/${blogVo.id }/adminCategory">카테고리</a></li>
-					<li><a href="${pageContext.request.contextPath}/${blogVo.id }/adminWrite">글작성</a></li>
+					<li><a href="${pageContext.request.contextPath}/${blogVo.id }/admin/basic">기본설정</a></li>
+					<li class="selected"><a href="${pageContext.request.contextPath}/${blogVo.id }/admin/category">카테고리</a></li>
+					<li><a href="${pageContext.request.contextPath}/${blogVo.id }/admin/write">글작성</a></li>
 				</ul>
 		      	<table class="admin-cat">
 		      		<tr>
@@ -33,7 +33,7 @@
 						<td>${vo.name }</td>
 						<td></td>
 						<td>${vo.desc }</td>
-						<td><img src="${pageContext.request.contextPath}/assets/images/delete.jpg"></td>
+						<td><a href="${pageContext.request.contextPath}/${blogVo.id}/admin/category/delete/${vo.no }"><img src="${pageContext.request.contextPath}/assets/images/delete.jpg"/></a></td>
 					</tr> 
 		      		</c:forEach>
 				</table>

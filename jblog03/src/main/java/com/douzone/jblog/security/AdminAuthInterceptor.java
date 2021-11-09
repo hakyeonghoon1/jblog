@@ -9,7 +9,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.douzone.jblog.vo.UserVo;
 
-public class AuthInterceptor extends HandlerInterceptorAdapter {
+public class AdminAuthInterceptor extends HandlerInterceptorAdapter {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
@@ -23,31 +23,44 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
 		//2. casting
 		HandlerMethod handlerMethod = (HandlerMethod)handler;
 		
-		//3. Handler Method의 @Auth 받아오기
-		Auth auth = handlerMethod.getMethodAnnotation(Auth.class);
+		//3. Handler Method의 @Admin 받아오기
+		Admin admin = handlerMethod.getMethodAnnotation(Admin.class);
 		
-		//4. HandlerMethod에 @Auth가 없으면 Type에 있는지 확인
-		if(auth == null) {
+		//4. HandlerMethod에 @Admin가 없으면 Type에 있는지 확인
+		if(admin == null) {
 			// 과제
-			auth = handlerMethod.getMethod().getDeclaringClass().getAnnotation(Auth.class);
+			admin = handlerMethod.getMethod().getDeclaringClass().getAnnotation(Admin.class);
 		}
 		
-		//5. Type과 Method에 @Auth가 적용이 안되어 있는 경우
-		if(auth ==null) {
+		//5. Type과 Method에 @Admin가 적용이 안되어 있는 경우
+		if(admin ==null) {
 			return true;
 		}
 		
-		//6. @Auth가 적용이 되어 있기 때문에 인증(Authenfication) 여부 확인
+		//6. @가 적용이 되어 있기 때문에 인증(enfication) 여부 확인
+		
+		String URI = request.getRequestURI();
+		String[] URISplit = URI.split("/");
+		String blogId = URISplit[2];
 		
 		HttpSession session = request.getSession();
+
 		if(session == null) {
+			
 			response.sendRedirect(request.getContextPath()+"/user/login");
 			return false;
 		}
 		
 		UserVo authUser = (UserVo)session.getAttribute("authUser");
 		if(authUser == null) {
+			
 			response.sendRedirect(request.getContextPath()+"/user/login");
+			return false;
+		}
+		
+		// 로그인 아이디와 블로그 아이디가 같지 않으면 블로그 메인 페이지로 이동
+		if(!blogId.equals(authUser.getId())) {
+			response.sendRedirect(request.getContextPath()+"/"+blogId);
 			return false;
 		}
 		

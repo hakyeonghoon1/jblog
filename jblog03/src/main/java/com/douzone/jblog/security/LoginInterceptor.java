@@ -1,6 +1,5 @@
 package com.douzone.jblog.security;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -15,9 +14,6 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 
 	@Autowired
 	private UserService userService;
-	
-	@Autowired
-	private ServletContext servletContext;
 	
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
@@ -35,7 +31,6 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 			return false;
 		}
 		//session 처리
-		//System.out.println(authUser);
 		
 		HttpSession session = request.getSession(true);
 		session.setAttribute("authUser", authUser);

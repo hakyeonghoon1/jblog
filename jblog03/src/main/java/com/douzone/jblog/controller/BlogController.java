@@ -2,9 +2,6 @@ package com.douzone.jblog.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
-import javax.servlet.ServletContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.douzone.jblog.security.Auth;
+import com.douzone.jblog.security.Admin;
 import com.douzone.jblog.security.AuthUser;
 import com.douzone.jblog.service.BlogService;
 import com.douzone.jblog.vo.BlogVo;
@@ -84,14 +81,14 @@ public class BlogController {
 		}
 	}
 		
-	@Auth
-	@RequestMapping("/adminBasic")
+	@Admin
+	@RequestMapping("/admin/basic")
 	public String adminBasic(@PathVariable("id") String blogId,
 							 @AuthUser UserVo authUser,
 							 Model model) {
-		if(!blogId.equals(authUser.getId())) {
-			return "redirect:/"+blogId;
-		}
+//		if(!blogId.equals(authUser.getId())) {
+//			return "redirect:/"+blogId;
+//		}
 		
 		BlogVo blogVo = blogService.getBlogBasic(authUser.getId());
 		model.addAttribute("blogVo", blogVo);
@@ -99,7 +96,7 @@ public class BlogController {
 		return "blog/blog-admin-basic";
 	}
 	
-	@Auth
+	@Admin
 	@RequestMapping("/admin/updateBasic")
 	public String updateBasic(String title, @RequestParam(value="logo-file") MultipartFile multipartFile, @AuthUser UserVo authUser, Model model) {
 		
@@ -111,8 +108,8 @@ public class BlogController {
 		return "blog/blog-admin-basic";
 	}
 	
-	@Auth
-	@RequestMapping("/adminCategory")
+	@Admin
+	@RequestMapping("/admin/category")
 	public String adminCategory(@PathVariable("id") String blogId,
 							 @AuthUser UserVo authUser, Model model) {
 		if(!blogId.equals(authUser.getId())) {
@@ -128,7 +125,8 @@ public class BlogController {
 		return "blog/blog-admin-category";
 	}
 	
-	@RequestMapping("/adminCategoryInsert")
+	@Admin
+	@RequestMapping("/admin/categoryInsert")
 	public String adminCategoryInsert(String name, String desc,
 									  @PathVariable("id") String blogId,
 									  @AuthUser UserVo authUser) {
@@ -143,8 +141,18 @@ public class BlogController {
 		return "redirect:/"+blogId+"/adminCategory";
 	}
 	
-	@Auth
-	@RequestMapping("/adminWrite")
+	@Admin
+	@RequestMapping("/admin/category/delete/{categoryNo}")
+	public String adminCategoryDelete(@PathVariable("categoryNo") Long categoryNo,
+									  @PathVariable("id") String blogId
+									  ) {
+		
+		blogService.deleteCategory(categoryNo);
+		return "redirect:/"+blogId+"/adminCategory";
+	}
+	
+	@Admin
+	@RequestMapping("/admin/write")
 	public String adminWrite(@PathVariable("id") String blogId,
 							 @AuthUser UserVo authUser, Model model) {
 		if(!blogId.equals(authUser.getId())) {
@@ -159,7 +167,8 @@ public class BlogController {
 		return "blog/blog-admin-write";
 	}
 	
-	@RequestMapping("/adminWriteInsert")
+	@Admin
+	@RequestMapping("/admin/writeInsert")
 	public String postInsert(String title, String content,
 							@PathVariable("id") String blogId,
 							@AuthUser UserVo authUser,

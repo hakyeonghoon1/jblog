@@ -100,4 +100,9 @@
 		]]>
 	</update>
 
+	<delete id="deleteCategory" parameterType="long" >
+		<![CDATA[
+			delete from category where no = #{categoryNo }
+		]]>
+	</delete>
 </mapper>
