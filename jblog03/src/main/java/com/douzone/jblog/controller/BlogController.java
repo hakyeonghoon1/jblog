@@ -138,7 +138,7 @@ public class BlogController {
 		vo.setDesc(desc);
 		vo.setName(name);
 		blogService.insertCategory(vo);
-		return "redirect:/"+blogId+"/adminCategory";
+		return "redirect:/"+blogId+"/admin/category";
 	}
 	
 	@Admin
@@ -148,7 +148,7 @@ public class BlogController {
 									  ) {
 		
 		blogService.deleteCategory(categoryNo);
-		return "redirect:/"+blogId+"/adminCategory";
+		return "redirect:/"+blogId+"/admin/category";
 	}
 	
 	@Admin

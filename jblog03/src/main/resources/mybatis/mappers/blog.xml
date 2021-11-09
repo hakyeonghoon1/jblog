@@ -5,7 +5,13 @@
 
 	<select id="findCategoryById" parameterType="string" resultType="categoryvo">
 		<![CDATA[
-			select no, name, `desc` from category where blog_id= #{blogId } 
+			select t1.no, t1.name, t1.`desc`, count(t2.no) postCNT
+			from category t1
+			left join post t2
+			on t1.no = t2.category_no
+			where t1.blog_id = #{blogId }
+			group by t1.no, t1.name, t1.`desc`
+			order by t1.no asc
 		]]>
 	</select>
 

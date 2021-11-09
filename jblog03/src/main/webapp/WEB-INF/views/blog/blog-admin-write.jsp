@@ -19,7 +19,7 @@
 					<li><a href="${pageContext.request.contextPath}/${blogVo.id }/admin/category">카테고리</a></li>
 					<li class="selected"><a href="${pageContext.request.contextPath}/${blogVo.id }/admin/write">글작성</a></li>
 				</ul>
-				<form action="${pageContext.request.contextPath}/${blogId }/adminWriteInsert" method="post">
+				<form action="${pageContext.request.contextPath}/${blogId }/admin/writeInsert" method="post">
 			      	<table class="admin-cat-write">
 			      		<tr>
 			      			<td class="t">제목</td>

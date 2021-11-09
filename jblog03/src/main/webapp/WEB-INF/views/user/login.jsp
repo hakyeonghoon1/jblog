@@ -18,6 +18,9 @@
 			<input type="hidden" name="blogId" value="${blogId }"/>
       		<label>아이디</label> <input type="text" name="id">
       		<label>패스워드</label> <input type="password" name="password">
+      		<c:if test="${result.equals('fail') }">
+      			<div>로그인에 실패하였습니다.</div>
+      		</c:if>
       		<input type="submit" value="로그인">
 		</form>
 	</div>

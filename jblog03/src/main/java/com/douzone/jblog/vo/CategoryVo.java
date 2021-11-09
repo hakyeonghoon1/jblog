@@ -6,6 +6,8 @@ public class CategoryVo {
 	private String name;
 	private String desc;
 	private String blogId;
+	private Long postCNT;
+	
 	public Long getNo() {
 		return no;
 	}
@@ -31,9 +33,17 @@ public class CategoryVo {
 		this.blogId = blogId;
 	}
 	
+	public Long getPostCNT() {
+		return postCNT;
+	}
+	public void setPostCNT(Long postCNT) {
+		this.postCNT = postCNT;
+	}
+	
 	@Override
 	public String toString() {
-		return "CategoryVo [no=" + no + ", name=" + name + ", desc=" + desc + ", blogId=" + blogId + "]";
+		return "CategoryVo [no=" + no + ", name=" + name + ", desc=" + desc + ", blogId=" + blogId + ", postCNT="
+				+ postCNT + "]";
 	}
 	
 	

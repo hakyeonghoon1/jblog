@@ -31,13 +31,13 @@
 		      		<tr>
 						<td>${vo.no }</td>
 						<td>${vo.name }</td>
-						<td></td>
+						<td>${vo.postCNT }</td>
 						<td>${vo.desc }</td>
 						<td><a href="${pageContext.request.contextPath}/${blogVo.id}/admin/category/delete/${vo.no }"><img src="${pageContext.request.contextPath}/assets/images/delete.jpg"/></a></td>
 					</tr> 
 		      		</c:forEach>
 				</table>
-				<form method="post" action="${pageContext.request.contextPath}/${blogId}/adminCategoryInsert">
+				<form method="post" action="${pageContext.request.contextPath}/${blogId}/admin/categoryInsert">
 	      			<h4 class="n-c">새로운 카테고리 추가</h4>
 			      	<table id="admin-cat-add">
 			      		<tr>
