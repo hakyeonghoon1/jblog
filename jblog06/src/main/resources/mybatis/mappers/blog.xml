@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="blog">
+
+	<select id="findCategoryById" parameterType="string" resultType="categoryvo">
+		<![CDATA[
+			select t1.no, t1.name, t1.`desc`, count(t2.no) postCNT
+			from category t1
+			left join post t2
+			on t1.no = t2.category_no
+			where t1.blog_id = #{blogId }
+			group by t1.no, t1.name, t1.`desc`
+			order by t1.no asc
+		]]>
+	</select>
+
+	<select id="findBlogById" parameterType="string" resultType="blogvo">
+		<![CDATA[
+			select id, title, logo from blog where id= #{id} 
+		]]>
+	</select>
+	
+	<select id="selectPostByCategoryNo" parameterType="map" resultType="postvo">
+		<![CDATA[
+			select t2.no, t2.title, t2.contents, t2.reg_date as regDate, t2.category_no as categoryNo
+			from category t1, post t2
+			where t1.no=t2.category_no
+			and t1.blog_id = #{blogId }
+			and t1.no = #{categoryNo }
+			order by t2.no desc
+		]]>
+	</select>
+	
+	<select id="getRecentPostCategoryNo" parameterType="string" resultType="long">
+		<![CDATA[
+			select a.no 
+			from
+			(
+				select *
+				from blog t1
+				left join category t2
+				on t1.id = t2.blog_id
+			) a
+			left join post b
+			on a.no = b.category_no
+			where a.id = #{blogId }
+			order by b.no desc
+			limit 1
+		]]>
+	</select>
+	
+	<select id="selectPost" parameterType="map" resultType="postvo">
+		<choose>
+			<when test="postNo == null">
+				<![CDATA[
+					select t2.no, t2.title, t2.contents, t2.reg_date as regDate, t2.category_no as categoryNo
+					from category t1, post t2
+					where t1.no=t2.category_no
+					and t1.blog_id = #{blogId }
+					and t1.no = #{categoryNo }
+					order by t2.no desc
+					limit 1
+				]]>
+			</when>
+			<otherwise>
+				<![CDATA[
+					select t2.no, t2.title, t2.contents, t2.reg_date as regDate, t2.category_no as categoryNo
+					from category t1, post t2
+					where t1.no=t2.category_no
+					and t1.blog_id = #{blogId }
+					and t1.no = #{categoryNo }
+					and t2.no = #{postNo }
+					order by t2.no desc
+					limit 1
+				]]>
+			</otherwise>
+		</choose>
+		
+	</select>
+	
+	<insert id="insertBlog" parameterType="blogvo">
+		<![CDATA[
+			insert into blog values(#{id }, #{title }, #{logo })
+		]]>
+	</insert>
+	
+	<insert id="insertCategory" parameterType="categoryvo">
+		<![CDATA[
+			insert into category values(null, #{name }, #{desc },#{blogId })
+		]]>
+	</insert>
+	
+	<insert id="insertPost" parameterType="postvo">
+		<![CDATA[
+			insert into post values(null, #{title }, #{contents }, now(), #{categoryNo })
+		]]>
+	</insert>
+	
+	<update id="update" parameterType="blogvo" >
+		<![CDATA[
+			update blog
+			set title = #{title },
+			    logo = #{logo}
+			where id = #{id }
+		]]>
+	</update>
+
+	<delete id="deleteCategory" parameterType="long" >
+		<![CDATA[
+			delete from category where no = #{categoryNo }
+		]]>
+	</delete>
+</mapper>
