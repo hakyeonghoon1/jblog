@@ -39,7 +39,7 @@
     
 	
 	<!-- 루트(글로벌) 로거 -->
-	<root level="info">
+	<root level="warn">
 		<appender-ref ref="consoleAppender" />
 	</root>
 
