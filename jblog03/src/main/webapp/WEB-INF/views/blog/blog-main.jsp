@@ -8,6 +8,35 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>JBlog</title>
 <Link rel="stylesheet" href="${pageContext.request.contextPath}/assets/css/jblog.css">
+<script type="text/javascript" src="${pageContext.request.contextPath }/assets/js/jquery/jquery-1.9.0.js"></script>
+<script>
+$(function(){
+	$("a[name='category']").click(function(event){
+		event.preventDefault();
+		console.log(this.getAttribute("href"));
+		var splits = this.getAttribute("href").split("/");
+		var blogId = splits[3];
+		console.log(blogId);
+		var urlLink =this.getAttribute("href");
+		$.ajax({
+			url:urlLink,
+			async:true,
+			type:"get",
+			dataType:"json",
+			success: function(response){
+				console.log(response);
+				var html =""
+				for(var i=0;i<response.data.length;i++){
+					html+="<li><a href='${pageContext.request.contextPath}/"+blogId+"/"+response.data[i].categoryNo+"/"+response.data[i].no+"'>"+response.data[i].title+"</a> <span>"+response.data[i].regDate+"</span></li>";	
+				}
+				
+				$("ul[class='blog-list']").html(html);
+			}
+			
+		});
+	});
+});
+</script>
 </head>
 <body>
 	<div id="container">
@@ -38,7 +67,7 @@
 			<h2>카테고리</h2>
 			<ul>
 				<c:forEach items="${categoryList }" var="list">
-					<li><a href="${pageContext.request.contextPath}/${blogId }/${list.no }">${list.name }</a></li>
+					<li><a name="category" href="${pageContext.request.contextPath}/api/${blogId }/${list.no }">${list.name }</a></li>
 				</c:forEach>
 			</ul>
 		</div>
